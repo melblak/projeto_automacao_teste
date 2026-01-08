@@ -1,0 +1,15 @@
+# Pastas de compilação (Build)
+build*/
+*.orig
+*.user
+
+# Cache do Clangd/LSP
+.qtc_clangd/
+.cache/
+
+# Binários e arquivos gerados
+*.exe
+*.obj
+*.o
+*.a
+*.lib
