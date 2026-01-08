@@ -12,12 +12,14 @@ public:
     explicit placa(QObject *parent = nullptr);
     ~placa();
 
-    void conectar(const QString &portaNome); // Ex: "COM3" ou "/dev/ttyUSB0"
+    void verifica_porta_e_conecta();
+    void conectar(const QString &portaNome);
     void desconectar();
 
 private:
     QSerialPort *arduino;
-
+    static const quint16 id_fornecedor; // Atribuir valores fixos ao conectar o arduino
+    static const quint16 id_produto;
 signals:
 };
 

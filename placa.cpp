@@ -1,6 +1,7 @@
 #include "placa.h"
 #include <QSerialPort>  //SerialPort habilitado no CMake
 #include <QSerialPortInfo>
+#include <QDebug>
 
 //Construtor
 placa::placa(QObject *parent)
@@ -11,6 +12,19 @@ placa::placa(QObject *parent)
 //Descontrutor
 placa::~placa() {
     desconectar();
+}
+
+void placa::verifica_porta_e_conecta()
+{
+    foreach(const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts()){
+        if(serialPortInfo.hasVendorIdentifier() && serialPortInfo.hasProductIdentifier()){
+            if(serialPortInfo.vendorIdentifier() == id_fornecedor){
+                if(serialPortInfo.productIdentifier() == id_produto){
+                    conectar(serialPortInfo.portName());
+                }
+            }
+        }
+    }
 }
 
 //Funções de inicialização da placa
@@ -24,6 +38,7 @@ void placa::conectar(const QString &portaNome)
     arduino->setStopBits(QSerialPort::OneStop);
     arduino->setFlowControl(QSerialPort::NoFlowControl);
 
+    qDebug() << "Inicialização completa";
 }
 
 //Função para finalização da placa
