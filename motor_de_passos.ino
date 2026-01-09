@@ -25,7 +25,7 @@ void loop() {
     if (comando = 'R') {
       moverMotor(passosParaMover);
 
-      // avisar ao Qt que o movimento acabou com o sinal 'K' (OK)
+      // avisar ao Qt que o movimento acabou com o sinal 'P'
       // TO-DO: implementar esse 'handhsake' no codigo qt
       Serial.print('P');
     }
