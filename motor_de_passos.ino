@@ -1,6 +1,5 @@
 #include <Stepper.h>
 
-// Constantes arbitrárias (podem ser alteradas quando for efetuado o teste físico)
 const int stepPin = 4;
 const int dirPin = 5;
 
