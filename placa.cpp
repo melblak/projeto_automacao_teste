@@ -2,12 +2,19 @@
 #include <QSerialPort>  //SerialPort habilitado no CMake
 #include <QSerialPortInfo>
 #include <QDebug>
+#include <QTimer>
 
 //Construtor
 placa::placa(QObject *parent)
     : QObject{parent}
 {
     arduino = new QSerialPort(this);
+    QObject::connect(this,&placa::portaVerificada,this,&placa::conectar);
+    QObject::connect(this,&placa::placaConectada,this,&placa::inicia_testemunho);
+    QObject::connect(this,&placa::execucaoIniciada,this,&placa::executar);
+
+    timer_resposta.setInterval(10000);
+    connect(&timer_resposta,&QTimer::timeout,this,&placa::onTimerTimeout);
 }
 //Descontrutor
 placa::~placa() {
@@ -22,7 +29,6 @@ void placa::verifica_porta_e_conecta()
         if(serialPortInfo.hasVendorIdentifier() && serialPortInfo.hasProductIdentifier()){
             if(serialPortInfo.vendorIdentifier() == id_fornecedor){
                 if(serialPortInfo.productIdentifier() == id_produto){
-                    QObject::connect(this,&placa::portaVerificada,this,&placa::conectar);
                     emit(portaVerificada(serialPortInfo.portName()));
                 }
             }
@@ -41,7 +47,6 @@ void placa::conectar(QString portaNome)
     arduino->setStopBits(QSerialPort::OneStop);
     arduino->setFlowControl(QSerialPort::NoFlowControl);
 
-    QObject::connect(this,&placa::placaConectada,this,&placa::inicia_testemunho);
     emit(placaConectada());
     qDebug() << "Inicialização completa";
 }
@@ -58,17 +63,27 @@ void placa::desconectar()
 void placa::altera_passo_rotacao()
 {
     arduino->write("R");
+    timer_resposta.start();
+    QByteArray dados = arduino->readAll();
+    if(dados.contains('P')){
+        timer_resposta.stop();
+    }else{
+        setStatus(Status::erroOcorrido);
+    }
 }
 
 // Função que faz o loop que ajusta a posição, tira foto e rotaciona
 void placa::executar()
 {
-    for(int i=1; i<=quant_ajustes; i++){
-        for(int j=0; j<=passos_por_rotacao; j+=largura_passo){
+    setStatus(Status::emFuncionamento);
+    for(int j=0; j<=passos_por_rotacao; j+=largura_passo){
+        if(status_atual == Status::emFuncionamento){
             tira_foto();
             altera_passo_rotacao();
+        }else{
+            qDebug() << "Processo interrompido";
+            break;
         }
-        altera_passo_ajuste();
     }
 }
 
@@ -76,8 +91,15 @@ void placa::executar()
 void placa::inicia_testemunho()
 {
     // Implementar trigger para o processo iniciar
-    QObject::connect(this,&placa::execucaoIniciada,this,&placa::executar);
     emit(execucaoIniciada());
+}
+
+// Slot de timeout
+void placa::onTimerTimeout()
+{
+    qDebug() << "Tempo de resposta excedido";
+    setStatus(Status::erroOcorrido);
+    timer_resposta.stop();
 }
 
 /* Para mover o motor:

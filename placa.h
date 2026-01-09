@@ -4,31 +4,47 @@
 #include <QObject>
 #include <QObject>
 #include <QSerialPort>
+#include <QTimer>
 
 class placa : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(Status Status READ Status WRITE setStatus NOTIFY StatusChanged FINAL)
+
 public:
     explicit placa(QObject *parent = nullptr);
     ~placa();
 
     void verifica_porta_e_conecta();
     void desconectar();
-    void tira_foto();
-    void altera_passo_rotacao();
-    void altera_passo_ajuste();
+
+    enum Status{
+        emStandBy = 0,
+        emFuncionamento,
+        erroOcorrido
+    };
+    Q_ENUM(Status)
+
 private:
     QSerialPort *arduino;
     QString nome_da_porta;
+    QTimer timer_resposta; // Timer para controlar o tempo de resposta do arduino
+    Status status_atual = Status::emStandBy; // Inicialização do status do sistema
     static const quint16 id_fornecedor; // Atribuir valores fixos ao conectar o arduino
     static const quint16 id_produto;
     static const int passos_por_rotacao; // Quantidade de passos em uma rotação
     static const int largura_passo; // Quantidade de passos a serem feitos para cada foto
     static const int quant_ajustes; // Quantidade de posições a serem fotografadas
-public slots:
+
+    void tira_foto();
+    void altera_passo_rotacao();
+    void setStatus(Status novoStatus); // Função set para o status do sistema
+
+private slots:
     void conectar(QString portaNome);
     void executar();
     void inicia_testemunho();
+    void onTimerTimeout();
 signals:
     void portaVerificada(QString portaNome);
     void placaConectada();
