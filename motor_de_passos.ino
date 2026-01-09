@@ -27,7 +27,7 @@ void loop() {
 
       // avisar ao Qt que o movimento acabou com o sinal 'K' (OK)
       // TO-DO: implementar esse 'handhsake' no codigo qt
-      Serial.print('K');
+      Serial.print('P');
     }
   }
 }
