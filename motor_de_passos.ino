@@ -1,9 +1,7 @@
-#include <Stepper.h>
-
 const int stepPin = 4;
 const int dirPin = 5;
 
-const int delay = 800;
+const int microDelay = 800;
 
 const int passosParaMover = 400
 
@@ -21,7 +19,7 @@ void loop() {
   if (Serial.available() > 0){
     char comando = Serial.read();
 
-    if (comando = 'R') {
+    if (comando == 'R') {
       moverMotor(passosParaMover);
 
       // avisar ao Qt que o movimento acabou com o sinal 'P'
@@ -34,8 +32,8 @@ void loop() {
 void moverMotor(int passos){
   for (int i=0; i < passos; i++){
     digitalWrite(stepPin, HIGH);
-    delayMicroseconds(800);
+    delayMicroseconds(microDelay);
     digitalWrite(stepPin, LOW);
-    delayMicroseconds(800);
+    delayMicroseconds(microDelay);
   }
 }
