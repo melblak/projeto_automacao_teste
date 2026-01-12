@@ -3,7 +3,7 @@ const int dirPin = 5;
 
 const int microDelay = 800;
 
-const int passosParaMover = 400
+const int passosParaMover = 40
 
 void setup() {
   Serial.begin(9600);
