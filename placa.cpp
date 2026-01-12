@@ -5,25 +5,25 @@
 #include <QTimer>
 
 //Construtor
-placa::placa(QObject *parent)
+Placa::Placa(QObject *parent)
     : QObject{parent}
 {
     arduino = new QSerialPort(this);
-    QObject::connect(this,&placa::portaVerificada,this,&placa::conectar);
-    QObject::connect(this,&placa::placaConectada,this,&placa::inicia_testemunho);
-    QObject::connect(this,&placa::execucaoIniciada,this,&placa::executar);
+    QObject::connect(this,&Placa::portaVerificada,this,&Placa::conectar);
+    QObject::connect(this,&Placa::PlacaConectada,this,&Placa::inicia_testemunho);
+    QObject::connect(this,&Placa::execucaoIniciada,this,&Placa::executar);
 
     timer_resposta.setInterval(10000);
-    connect(&timer_resposta,&QTimer::timeout,this,&placa::onTimerTimeout);
+    connect(&timer_resposta,&QTimer::timeout,this,&Placa::onTimerTimeout);
 }
 //Descontrutor
-placa::~placa() {
+Placa::~Placa() {
     desconectar();
 }
 
 
-//Função para verificar os dados da placa e chamar a conexão
-void placa::verifica_porta_e_conecta()
+//Função para verificar os dados da Placa e chamar a conexão
+void Placa::verifica_porta_e_conecta()
 {
     foreach(const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts()){
         if(serialPortInfo.hasVendorIdentifier() && serialPortInfo.hasProductIdentifier()){
@@ -36,8 +36,8 @@ void placa::verifica_porta_e_conecta()
     }
 }
 
-//Funções de inicialização da placa
-void placa::conectar(QString portaNome)
+//Funções de inicialização da Placa
+void Placa::conectar(QString portaNome)
 {
     arduino->setPortName(portaNome);
     arduino->open(QIODevice::ReadWrite);
@@ -47,12 +47,12 @@ void placa::conectar(QString portaNome)
     arduino->setStopBits(QSerialPort::OneStop);
     arduino->setFlowControl(QSerialPort::NoFlowControl);
 
-    emit(placaConectada());
+    emit(PlacaConectada());
     qDebug() << "Inicialização completa";
 }
 
-// Função para finalização da placa
-void placa::desconectar()
+// Função para finalização da Placa
+void Placa::desconectar()
 {
     if(arduino->isOpen()){
         arduino->close();
@@ -60,7 +60,7 @@ void placa::desconectar()
 }
 
 // Função que comunica o arduino para acionar o motor
-void placa::altera_passo_rotacao()
+void Placa::altera_passo_rotacao()
 {
     arduino->write("R");
     timer_resposta.start();
@@ -73,7 +73,7 @@ void placa::altera_passo_rotacao()
 }
 
 // Função que faz o loop que ajusta a posição, tira foto e rotaciona
-void placa::executar()
+void Placa::executar()
 {
     setStatus(Status::emFuncionamento);
     for(int j=0; j<=passos_por_rotacao; j+=largura_passo){
@@ -88,14 +88,14 @@ void placa::executar()
 }
 
 // Função de trigger da execução
-void placa::inicia_testemunho()
+void Placa::inicia_testemunho()
 {
     // Implementar trigger para o processo iniciar
     emit(execucaoIniciada());
 }
 
 // Slot de timeout
-void placa::onTimerTimeout()
+void Placa::onTimerTimeout()
 {
     qDebug() << "Tempo de resposta excedido";
     setStatus(Status::erroOcorrido);

@@ -1,19 +1,19 @@
-#ifndef PLACA_H
-#define PLACA_H
+#ifndef placa_H
+#define placa_H
 
 #include <QObject>
 #include <QObject>
 #include <QSerialPort>
 #include <QTimer>
 
-class placa : public QObject
+class Placa : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Status Status READ Status WRITE setStatus NOTIFY StatusChanged FINAL)
 
 public:
-    explicit placa(QObject *parent = nullptr);
-    ~placa();
+    explicit Placa(QObject *parent = nullptr);
+    ~Placa();
 
     void verifica_porta_e_conecta();
     void desconectar();
@@ -47,8 +47,8 @@ private slots:
     void onTimerTimeout();
 signals:
     void portaVerificada(QString portaNome);
-    void placaConectada();
+    void PlacaConectada();
     void execucaoIniciada();
 };
 
-#endif // PLACA_H
+#endif // Placa_H
