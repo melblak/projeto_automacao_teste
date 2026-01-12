@@ -19,6 +19,7 @@ Placa::Placa(QObject *parent)
 }
 //Descontrutor
 Placa::~Placa() {
+    qDebug() << "Placa desconectada";
     desconectar();
 }
 
@@ -61,8 +62,9 @@ void Placa::conectar(QString portaNome)
     arduino->setStopBits(QSerialPort::OneStop);
     arduino->setFlowControl(QSerialPort::NoFlowControl);
 
-    emit(PlacaConectada());
     qDebug() << "Inicialização completa";
+    emit(PlacaConectada());
+
 }
 
 // Função para finalização da Placa

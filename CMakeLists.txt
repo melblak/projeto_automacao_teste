@@ -15,8 +15,8 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_executable(projeto_automacao_teste
   main.cpp
-  placa.h placa.cpp
-
+  placa.h
+  placa.cpp
 )
 target_link_libraries(projeto_automacao_teste PRIVATE
   Qt${QT_VERSION_MAJOR}::Core
