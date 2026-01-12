@@ -82,6 +82,7 @@ void Placa::executar()
             altera_passo_rotacao();
         }else{
             qDebug() << "Processo interrompido";
+            setStatus(Status::emStandBy);
             break;
         }
     }
