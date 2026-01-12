@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-47253b21f2094cc33c7d.json",
+					"jsonFile" : "directory-.-Debug-81713c7721ff5c404b59.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "projeto_automacao_teste::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-projeto_automacao_teste-Debug-78c9c22a6b3c09a51ec1.json",
+					"jsonFile" : "target-projeto_automacao_teste-Debug-c014055d558082756b01.json",
 					"name" : "projeto_automacao_teste",
 					"projectIndex" : 0
 				},
